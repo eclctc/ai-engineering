@@ -1,0 +1,4 @@
+time,user,video,playback position,paused,volume
+1469974424,cheryl,intro.html,5,False,10.0
+1469974424,sue,advanced.html,23,False,10.0
+1469977424,bob,intro.html,1,True,10.0

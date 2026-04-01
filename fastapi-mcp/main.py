@@ -213,3 +213,6 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)) -> None:
     db.commit()
 
 
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("main:app", host="127.0.0.1", port=8000)

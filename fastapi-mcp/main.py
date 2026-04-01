@@ -223,6 +223,6 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)) -> None:
 if __name__ == "__main__":
     import uvicorn
     # Add operations to the MCP server
-    mcp = FastApiMCP(app, include_operations=["get_todo", "create_todo", "update_todo", "delete_todo"])
+    mcp = FastApiMCP(app, include_operations=["get_todo", "create_todo", "update_todo", "delete_todo", "get_todos"])
     mcp.mount()
     uvicorn.run(app, host="127.0.0.1", port=8000)

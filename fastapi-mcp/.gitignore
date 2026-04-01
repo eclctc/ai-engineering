@@ -5,6 +5,15 @@ build/
 dist/
 wheels/
 *.egg-info
-
+*.pyo
+*.pyc
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+*.pyzw
+*.pyzwz
+.Python
 # Virtual environments
 .venv
+venv/

@@ -14,6 +14,9 @@ from pydantic import BaseModel, Field
 from sqlalchemy import Boolean, Column, Integer, String, create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
+from fastapi_mcp import FastApiMCP
+
+
 # ---------------------------------------------------------------------------
 # Database configuration
 # ---------------------------------------------------------------------------
@@ -125,7 +128,7 @@ def read_root() -> dict:
     return {"message": "Welcome to the FastAPI ToDo application!"}
 
 
-@app.get("/todos", response_model=List[Todo], summary="Get all todos", tags=["todos"])
+@app.get("/todos", response_model=List[Todo], operation_id="get_todos", summary="Get all todos", tags=["todos"])
 def get_all_todos(db: Session = Depends(get_db)) -> List[Todo]:
     """Retrieve all ToDo items."""
 
@@ -134,6 +137,7 @@ def get_all_todos(db: Session = Depends(get_db)) -> List[Todo]:
 
 @app.get(
     "/todos/{todo_id}",
+    operation_id="get_todo",
     response_model=Todo,
     summary="Get a single todo by ID",
     tags=["todos"],
@@ -152,6 +156,7 @@ def get_todo(todo_id: int, db: Session = Depends(get_db)) -> Todo:
 
 @app.post(
     "/todos",
+    operation_id="create_todo",
     response_model=Todo,
     status_code=status.HTTP_201_CREATED,
     summary="Create a new todo",
@@ -169,6 +174,7 @@ def create_todo(todo_in: TodoCreate, db: Session = Depends(get_db)) -> Todo:
 
 @app.put(
     "/todos/{todo_id}",
+    operation_id="update_todo",
     response_model=Todo,
     summary="Update an existing todo",
     tags=["todos"],
@@ -195,6 +201,7 @@ def update_todo(todo_id: int, todo_in: TodoUpdate, db: Session = Depends(get_db)
 
 @app.delete(
     "/todos/{todo_id}",
+    operation_id="delete_todo",
     status_code=status.HTTP_204_NO_CONTENT,
     summary="Delete a todo",
     tags=["todos"],
@@ -215,4 +222,7 @@ def delete_todo(todo_id: int, db: Session = Depends(get_db)) -> None:
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("main:app", host="127.0.0.1", port=8000)
+    # Add operations to the MCP server
+    mcp = FastApiMCP(app, include_operations=["get_todo", "create_todo", "update_todo", "delete_todo"])
+    mcp.mount()
+    uvicorn.run(app, host="127.0.0.1", port=8000)
